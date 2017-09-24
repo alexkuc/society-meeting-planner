@@ -10,7 +10,7 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cells: Array(10).fill(false).map(() => Array(7).fill(false)),
+            init: Array(10).fill(false).map(() => Array(7).fill(false)),
             schedules: new Array(0),
             selection: null,
         };
@@ -19,38 +19,43 @@ class App extends Component {
     toggle = (headers) => {
         const keys = headers.split(' '); // 1st = rows, 2nd = column
         this.setState((prevState, props) => {
-            const newObj = Object.assign({}, this.state.cells);
-            newObj[keys[0]][keys[1]] = !newObj[keys[0]][keys[1]];
-            return newObj;
+            if (prevState.selection === null) { // catching non-selected schedule update
+                return false;
+            }
+            const newState = Object.assign({}, prevState);
+            const i = newState.selection; // alias to make things easier to read
+            const schedules = newState.schedules; // same here
+            schedules[i].cells[keys[0]][keys[1]] = !schedules[i].cells[keys[0]][keys[1]];
+            return schedules;
         });
     }
 
-    addSchedule = () => {
-        this.setState(() => {
-            const newArr = this.state.schedules.slice();
-            newArr.push('');
-            return { schedules: newArr };
+    createSchedule = () => {
+        this.setState((prevState, props) => {
+            const newState = Object.assign({}, prevState);
+            newState.schedules.push({ name: '', cells: Array(10).fill(false).map(() => Array(7).fill(false)), });
+            return newState.schedules;
         });
     }
 
-    updateSchedule = (i, value) => {
-        this.setState(() => {
-            const newArr = this.state.schedules.slice();
-            newArr[i] = value;
-            return { schedules: newArr };
+    updateScheduleName = (i, value) => {
+        this.setState((prevState, props) => {
+            const newState = Object.assign({}, prevState);
+            newState.schedules[i].name = value;
+            return newState.schedules;
         });
     }
 
     removeSchedule = (i) => {
-        this.setState(() => {
-            const newArr = this.state.schedules.slice();
-            newArr.splice(i, 1);
-            return { schedules: newArr };
+        this.setState((prevState, props) => {
+            const newState = Object.assign({}, prevState);
+            newState.schedules.splice(i, 1);
+            return newState.schedules;
         })
     }
 
     selectSchedule = (i) => {
-        this.setState(() => {
+        this.setState((prevState, props) => {
             return { selection: i };
         });
     }
@@ -60,18 +65,21 @@ class App extends Component {
     }
 
     render() {
+        let matrix = this.state.init;
+        if (typeof this.state.selection === 'string') {
+            matrix = this.state.schedules[this.state.selection].cells;
+        }
         return (
             <div className="appWrapper"> 
                 <Grid>
                     <Row>
                         <Col lg={6}>
-                            <Table toggle={this.toggle} cells={this.state.cells} />
+                            <Table toggle={this.toggle} matrix={matrix} />
                         </Col>
-                        <Navigation 
-                            schedules={this.state.schedules}
-                            selection={this.state.selection}
-                            addSchedule={this.addSchedule}
-                            updateSchedule={this.updateSchedule}
+                        <Navigation
+                            schedules={this.state.schedules} 
+                            createSchedule={this.createSchedule}
+                            updateScheduleName={this.updateScheduleName}
                             removeSchedule={this.removeSchedule}
                             selectSchedule={this.selectSchedule}
                             report={this.report}
@@ -83,18 +91,18 @@ class App extends Component {
     }
 }
 
-function Navigation(props){
+function Navigation(props) {
     let schedules = [];
-        for (let i = 0; i < props.schedules.length; i++) {
-            schedules.push(<Schedule 
-                                text={props.schedules[i]} 
-                                updateSchedule={props.updateSchedule} 
+    for (let i = 0; i < props.schedules.length; i++) {
+        schedules.push(<Schedule 
+                                schedule={props.schedules[i]} 
+                                updateScheduleName={props.updateScheduleName} 
                                 removeSchedule={props.removeSchedule}
                                 selectSchedule={props.selectSchedule} 
                                 i={i} key={i} 
                             />)
     }
-    return(
+    return (
         <Col lg={3}>
             <Panel style={{textAlign: 'center'}} >
                 Banner placeholder
@@ -102,7 +110,7 @@ function Navigation(props){
             <ButtonToolbar>
                 <ButtonGroup justified>
                     <Button onClick={props.report}>Report</Button>
-                    <Button onClick={props.addSchedule}>Add Schedule</Button>
+                    <Button onClick={props.createSchedule}>Add Schedule</Button>
                 </ButtonGroup>
             </ButtonToolbar>
             <form style={{paddingTop: '5%'}}>
@@ -118,10 +126,11 @@ class Schedule extends Component {
     }
 
     handleChangeText = (e) => {
-        this.props.updateSchedule(this.props.i, e.target.value);
+        this.props.updateScheduleName(this.props.i, e.target.value);
     }
 
     handleChangeRadio = (e) => {
+        console.log(1);
         this.props.selectSchedule(e.target.value);
     }
 
@@ -130,9 +139,9 @@ class Schedule extends Component {
             <FormGroup>
                 <InputGroup>
                     <InputGroup.Addon>
-                        <input type="radio" name="radioGroup" value={this.props.i} onChange={this.handleChangeRadio} />
+                        <input type="radio" name="schedule" value={this.props.i} onChange={this.handleChangeRadio} />
                     </InputGroup.Addon>
-                    <FormControl onChange={this.handleChangeText} type="text" value={this.props.text} />
+                    <FormControl onChange={this.handleChangeText} type="text" value={this.props.schedule.name} />
                     <InputGroup.Button>
                         <Button onClick={this.handleClick} bsStyle="danger">
                             <Glyphicon glyph="remove" />
@@ -148,7 +157,7 @@ function Table(props) {
     return (
         <table>
             <Header />
-            <Body toggle={props.toggle} cells={props.cells} />
+            <Body toggle={props.toggle} matrix={props.matrix} />
         </table>
     );
 }
@@ -179,16 +188,16 @@ function Header() {
 
 class Body extends Component {
     render() {
-        let rows = [];
-        for (let i = 0; i < this.props.cells.length; i++) {
-            let cells = [];
-            for (let j = 0; j < this.props.cells[i].length; j++) {
+        const rows = [];
+        for (let i = 0; i < this.props.matrix.length; i++) {
+            const cells = [];
+            for (let j = 0; j < this.props.matrix[i].length; j++) {
                 const headers = i + ' ' + j;
                 let color = '';
-                if (this.props.cells[i][j] === true) {
+                if (this.props.matrix[i][j] === true) {
                     color = 'green';
                 }
-                cells.push(<Cell headers={headers} key={headers} toggle={this.props.toggle} color={color} value={this.props.cells[i][j]} />);
+                cells.push(<Cell headers={headers} key={headers} toggle={this.props.toggle} color={color} value={this.props.matrix[i][j]} />);
             }
             rows.push(<tr key={i}><HourCell i={i} />{cells}</tr>);
         }
