@@ -20,7 +20,7 @@ class App extends Component {
     toggle = (headers) => {
         const keys = headers.split(' '); // 1st = rows, 2nd = column
         this.setState((prevState, props) => {
-            if (prevState.selection === null) { // catching non-selected schedule update
+            if (prevState.selection === null || prevState.schedules.length < 1) { // catching non-selected schedule update
                 return false;
             }
             const newState = Object.assign({}, prevState);
