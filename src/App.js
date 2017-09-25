@@ -11,8 +11,9 @@ class App extends Component {
         super(props);
         this.state = {
             init: Array(10).fill(false).map(() => Array(7).fill(false)),
-            schedules: new Array(0),
+            schedules: Array(0),
             selection: null,
+            report: null,
         };
     }
 
@@ -25,7 +26,7 @@ class App extends Component {
             const newState = Object.assign({}, prevState);
             const i = newState.selection; // alias to make things easier to read
             const schedules = newState.schedules; // same here
-            schedules[i].cells[keys[0]][keys[1]] = !schedules[i].cells[keys[0]][keys[1]];
+            schedules[i].matrix[keys[0]][keys[1]] = !schedules[i].matrix[keys[0]][keys[1]];
             return schedules;
         });
     }
@@ -33,7 +34,7 @@ class App extends Component {
     createSchedule = () => {
         this.setState((prevState, props) => {
             const newState = Object.assign({}, prevState);
-            newState.schedules.push({ name: '', cells: Array(10).fill(false).map(() => Array(7).fill(false)), });
+            newState.schedules.push({ name: '', matrix: Array(10).fill(false).map(() => Array(7).fill(false)), });
             return newState.schedules;
         });
     }
@@ -42,7 +43,7 @@ class App extends Component {
         this.setState((prevState, props) => {
             const newState = Object.assign({}, prevState);
             newState.schedules[i].name = value;
-            return newState.schedules;
+            return newState;
         });
     }
 
@@ -50,24 +51,55 @@ class App extends Component {
         this.setState((prevState, props) => {
             const newState = Object.assign({}, prevState);
             newState.schedules.splice(i, 1);
-            return newState.schedules;
+            newState.selection = newState.selection - 1;
+            return newState;
         })
     }
 
     selectSchedule = (i) => {
         this.setState((prevState, props) => {
-            return { selection: i };
+            const newState = Object.assign({}, prevState);
+            newState.selection = i;
+            newState.report = null;
+            return newState;
         });
     }
 
     report = () => {
-
+        this.setState((prevState, props) => {
+            const newState = Object.assign({}, prevState);
+            const rows = [];
+            for (let i = 0; i < this.state.schedules[0].matrix.length; i++) { // i = row
+                const cells = [];
+                for (let j = 0; j < this.state.schedules[0].matrix[i].length; j++) { // j = cell
+                    const arr = [];
+                    for (let k = 0; k < this.state.schedules.length; k++) { // k = matrix to compare against
+                        arr.push(this.state.schedules[k].matrix[i][j]);
+                    }
+                    let value = arr.find((el) => {
+                        return el === false;
+                    })
+                    if (typeof value === 'undefined') {
+                        value = true;
+                    }
+                    cells.push(value);
+                }
+                rows.push(cells);
+            }
+            newState.report = rows;
+            return newState;
+        });
     }
 
     render() {
         let matrix = this.state.init;
-        if (typeof this.state.selection === 'string') {
-            matrix = this.state.schedules[this.state.selection].cells;
+        if (typeof this.state.selection === 'string' && this.state.schedules.length > 0) {
+            console.log(this.state.selection);
+            console.log(this.state.schedules);
+            matrix = this.state.schedules[this.state.selection].matrix;
+        }
+        if (Array.isArray(this.state.report)) {
+            matrix = this.state.report;
         }
         return (
             <div className="appWrapper"> 
@@ -130,7 +162,6 @@ class Schedule extends Component {
     }
 
     handleChangeRadio = (e) => {
-        console.log(1);
         this.props.selectSchedule(e.target.value);
     }
 
