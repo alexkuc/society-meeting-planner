@@ -131,6 +131,9 @@ class App extends Component {
                         />
                     </Row>
                 </Grid>
+                <div className="issue-tracker">
+                    <a href="https://bitbucket.org/alexkuc/society-meeting-planner/issues/new">report bug <Glyphicon glyph="link" /></a>
+                </div>
                 <div className="credits">
                     <span>Created by Alexander K.</span>
                 </div>

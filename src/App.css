@@ -34,6 +34,17 @@ body {
   font-weight: bold;
 }
 
+.issue-tracker {
+  position: relative;
+  right: 1%;
+  bottom: 1%;
+  float: right;
+}
+
+.issue-tracker .glyphicon {
+  vertical-align: text-top;
+}
+
 table {
   height: 100%;
   width: 100%;
