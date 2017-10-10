@@ -19,5 +19,6 @@
   "main": "index.js",
   "repository": "https://alexkuc@bitbucket.org/alexkuc/society-meeting-planner.git",
   "author": "Alexander Kucheryuk <alexander.kucheryuk@icloud.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://alexkuc.bitbucket.io/society-meeting-planner"
 }
