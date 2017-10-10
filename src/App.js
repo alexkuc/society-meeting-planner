@@ -156,7 +156,7 @@ function Navigation(props) {
     }
     return (
         <Col lg={3}>
-            <Panel style={{textAlign: 'center', fontWeight: 'bold',}} >
+            <Panel className="banner" >
                 Society Meeting Planner App
             </Panel>
             <ButtonToolbar>
@@ -165,7 +165,7 @@ function Navigation(props) {
                     <Button onClick={props.createSchedule}>Add Schedule</Button>
                 </ButtonGroup>
             </ButtonToolbar>
-            <form style={{paddingTop: '5%'}}>
+            <form className="schedules">
                 {schedules}
             </form>
         </Col>
@@ -252,7 +252,7 @@ class Body extends Component {
                 const headers = i + ' ' + j;
                 let color = '';
                 if (this.props.matrix[i][j] === true) {
-                    color = 'green';
+                    color = 'selected-cell';
                 }
                 cells.push(<Cell headers={headers} key={headers} toggle={this.props.toggle} color={color} value={this.props.matrix[i][j]} />);
             }
@@ -268,7 +268,7 @@ class Cell extends Component {
     }
 
     render() {
-        return <td headers={this.props.headers} onClick={this.handleClick} style={{backgroundColor: this.props.color}}>{this.props.value}</td>;
+        return <td headers={this.props.headers} onClick={this.handleClick} className={this.props.color}>{this.props.value}</td>;
     }
 }
 

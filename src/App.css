@@ -27,6 +27,15 @@ body {
     border: 1px solid black;
 }
 
+.banner {
+  text-align: center;
+  font-weight: bold;
+}
+
+.schedules {
+  padding-top: 5%;
+}
+
 .credits {
   text-align: center;
   color: white;
@@ -43,6 +52,10 @@ body {
 
 .issue-tracker .glyphicon {
   vertical-align: text-top;
+}
+
+.selected-cell {
+  background-color: #3661DE;
 }
 
 table {
