@@ -128,6 +128,9 @@ class App extends Component {
                         />
                     </Row>
                 </Grid>
+                <div className="credits">
+                    <span>Created by Alexander K.</span>
+                </div>
             </div>
         );
     }

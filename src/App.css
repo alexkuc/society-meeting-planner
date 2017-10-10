@@ -27,6 +27,13 @@ body {
     border: 1px solid black;
 }
 
+.credits {
+  text-align: center;
+  color: white;
+  margin: 5%;
+  font-weight: bold;
+}
+
 table {
   height: 100%;
   width: 100%;
