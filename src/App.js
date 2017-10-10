@@ -147,8 +147,8 @@ function Navigation(props) {
     }
     return (
         <Col lg={3}>
-            <Panel style={{textAlign: 'center'}} >
-                Banner placeholder
+            <Panel style={{textAlign: 'center', fontWeight: 'bold',}} >
+                Society Meeting Planner App
             </Panel>
             <ButtonToolbar>
                 <ButtonGroup justified>
