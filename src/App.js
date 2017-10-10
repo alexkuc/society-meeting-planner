@@ -51,7 +51,11 @@ class App extends Component {
         this.setState((prevState, props) => {
             const newState = Object.assign({}, prevState);
             newState.schedules.splice(i, 1);
-            newState.selection = newState.selection - 1;
+            if (newState.selection !== null && newState.selection > 1) { // if more than one schedule exists
+                newState.selection = newState.selection - 1;
+            } else { // last schedule is removed; selection counter is reset
+                newState.selection = null;
+            }
             return newState;
         })
     }
@@ -59,13 +63,17 @@ class App extends Component {
     selectSchedule = (i) => {
         this.setState((prevState, props) => {
             const newState = Object.assign({}, prevState);
-            newState.selection = i;
+            newState.selection = Number(i);
             newState.report = null;
             return newState;
         });
     }
 
     report = () => {
+        if (this.state.schedules.length === 0) {
+            return;
+        }
+
         this.setState((prevState, props) => {
             const newState = Object.assign({}, prevState);
             const rows = [];
@@ -87,20 +95,20 @@ class App extends Component {
                 rows.push(cells);
             }
             newState.report = rows;
+            newState.selection = null;
             return newState;
         });
     }
 
     render() {
         let matrix = this.state.init;
-        if (typeof this.state.selection === 'string' && this.state.schedules.length > 0) {
-            console.log(this.state.selection);
-            console.log(this.state.schedules);
+        if (typeof this.state.selection === 'number' && this.state.schedules.length > 0) {
             matrix = this.state.schedules[this.state.selection].matrix;
         }
         if (Array.isArray(this.state.report)) {
             matrix = this.state.report;
         }
+        const is_reporting = this.state.report !== null;
         return (
             <div className="appWrapper"> 
                 <Grid>
@@ -115,6 +123,8 @@ class App extends Component {
                             removeSchedule={this.removeSchedule}
                             selectSchedule={this.selectSchedule}
                             report={this.report}
+                            selection={this.state.selection}
+                            is_reporting={is_reporting}
                         />
                     </Row>
                 </Grid>
@@ -132,6 +142,7 @@ function Navigation(props) {
                                 removeSchedule={props.removeSchedule}
                                 selectSchedule={props.selectSchedule} 
                                 i={i} key={i} 
+                                selection={props.selection}
                             />)
     }
     return (
@@ -141,7 +152,7 @@ function Navigation(props) {
             </Panel>
             <ButtonToolbar>
                 <ButtonGroup justified>
-                    <Button onClick={props.report}>Report</Button>
+                    <Button onClick={props.report} active={props.is_reporting}>Report</Button>
                     <Button onClick={props.createSchedule}>Add Schedule</Button>
                 </ButtonGroup>
             </ButtonToolbar>
@@ -153,7 +164,7 @@ function Navigation(props) {
 }
 
 class Schedule extends Component {
-    handleClick = () => {
+    handleRemoveSchedule = () => {
         this.props.removeSchedule(this.props.i);
     }
 
@@ -161,20 +172,26 @@ class Schedule extends Component {
         this.props.updateScheduleName(this.props.i, e.target.value);
     }
 
-    handleChangeRadio = (e) => {
-        this.props.selectSchedule(e.target.value);
+    handleSelectSchedule = (e) => {
+        this.props.selectSchedule(this.props.i);
     }
 
     render() {
+        let is_active = false;
+        if (this.props.selection === this.props.i) {
+            is_active = true;
+        }
         return (
             <FormGroup>
                 <InputGroup>
-                    <InputGroup.Addon>
-                        <input type="radio" name="schedule" value={this.props.i} onChange={this.handleChangeRadio} />
-                    </InputGroup.Addon>
+                    <InputGroup.Button>
+                        <Button onClick={this.handleSelectSchedule} active={is_active} value={this.props.i}>
+                            <Glyphicon glyph="circle-arrow-right" />
+                        </Button>
+                    </InputGroup.Button>
                     <FormControl onChange={this.handleChangeText} type="text" value={this.props.schedule.name} />
                     <InputGroup.Button>
-                        <Button onClick={this.handleClick} bsStyle="danger">
+                        <Button onClick={this.handleRemoveSchedule} bsStyle="danger" value={this.props.i}>
                             <Glyphicon glyph="remove" />
                         </Button>
                     </InputGroup.Button>
