@@ -35,7 +35,10 @@ class App extends Component {
         this.setState((prevState, props) => {
             const newState = Object.assign({}, prevState);
             newState.schedules.push({ name: '', matrix: Array(10).fill(false).map(() => Array(7).fill(false)), });
-            return newState.schedules;
+            if (newState.schedules.length === 1) {
+                newState.selection = 0;
+            }
+            return newState;
         });
     }
 
