@@ -1,11 +1,26 @@
 {
-  "main.css": "static/css/main.a2d2758c.css",
-  "main.css.map": "static/css/main.a2d2758c.css.map",
-  "main.js": "static/js/main.8324fa0b.js",
-  "main.js.map": "static/js/main.8324fa0b.js.map",
-  "static/media/glyphicons-halflings-regular.eot": "static/media/glyphicons-halflings-regular.f4769f9b.eot",
-  "static/media/glyphicons-halflings-regular.svg": "static/media/glyphicons-halflings-regular.89889688.svg",
-  "static/media/glyphicons-halflings-regular.ttf": "static/media/glyphicons-halflings-regular.e18bbf61.ttf",
-  "static/media/glyphicons-halflings-regular.woff": "static/media/glyphicons-halflings-regular.fa277232.woff",
-  "static/media/glyphicons-halflings-regular.woff2": "static/media/glyphicons-halflings-regular.448c34a5.woff2"
+  "files": {
+    "main.css": "/society-meeting-planner/static/css/main.40ed5b69.chunk.css",
+    "main.js": "/society-meeting-planner/static/js/main.6222ea94.chunk.js",
+    "main.js.map": "/society-meeting-planner/static/js/main.6222ea94.chunk.js.map",
+    "runtime-main.js": "/society-meeting-planner/static/js/runtime-main.9fc6445a.js",
+    "runtime-main.js.map": "/society-meeting-planner/static/js/runtime-main.9fc6445a.js.map",
+    "static/css/2.711365ca.chunk.css": "/society-meeting-planner/static/css/2.711365ca.chunk.css",
+    "static/js/2.79deae11.chunk.js": "/society-meeting-planner/static/js/2.79deae11.chunk.js",
+    "static/js/2.79deae11.chunk.js.map": "/society-meeting-planner/static/js/2.79deae11.chunk.js.map",
+    "index.html": "/society-meeting-planner/index.html",
+    "precache-manifest.573a637ee3b6c75fc907e5f0b4ad1169.js": "/society-meeting-planner/precache-manifest.573a637ee3b6c75fc907e5f0b4ad1169.js",
+    "service-worker.js": "/society-meeting-planner/service-worker.js",
+    "static/css/2.711365ca.chunk.css.map": "/society-meeting-planner/static/css/2.711365ca.chunk.css.map",
+    "static/css/main.40ed5b69.chunk.css.map": "/society-meeting-planner/static/css/main.40ed5b69.chunk.css.map",
+    "static/js/2.79deae11.chunk.js.LICENSE": "/society-meeting-planner/static/js/2.79deae11.chunk.js.LICENSE",
+    "static/media/bootstrap.css": "/society-meeting-planner/static/media/glyphicons-halflings-regular.fa277232.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.9fc6445a.js",
+    "static/css/2.711365ca.chunk.css",
+    "static/js/2.79deae11.chunk.js",
+    "static/css/main.40ed5b69.chunk.css",
+    "static/js/main.6222ea94.chunk.js"
+  ]
 }
