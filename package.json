@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^3.4.1",
     "react": "16.12.0",
-    "react-bootstrap": "^1.0.0-beta.16",
+    "react-bootstrap": "0.33.1",
     "react-dom": "16.12.0",
     "react-scripts": "3.3.0"
   },
@@ -20,5 +20,17 @@
   "repository": "https://alexkuc@bitbucket.org/alexkuc/society-meeting-planner.git",
   "author": "Alexander Kucheryuk <alexander.kucheryuk@icloud.com>",
   "license": "MIT",
-  "homepage": "https://alexkuc.bitbucket.io/society-meeting-planner"
+  "homepage": "https://alexkuc.bitbucket.io/society-meeting-planner",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
 }
